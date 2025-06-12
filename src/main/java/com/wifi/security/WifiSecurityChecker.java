@@ -213,6 +213,29 @@ public class WifiSecurityChecker {
         }
     }
 
+    public static boolean isNetworkChanged() throws Exception {
+        ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "netsh", "wlan", "show", "interfaces");
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
+        
+        StringBuilder output = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+        }
+        
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new Exception("WiFi 정보를 가져오는데 실패했습니다. (종료 코드: " + exitCode + ")");
+        }
+        
+        String currentSSID = extractSSID(output.toString());
+        return !currentSSID.equals("Unknown");
+    }
+
     static class DiscordMessage {
         private String content;
 
