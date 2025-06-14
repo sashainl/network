@@ -189,9 +189,8 @@ public class WifiSecurityGUI extends JFrame {
                         });
 
                         if (!ssid.equals(lastSSID)) {
-                            appendLog("새로운 WiFi 감지: " + ssid);
-                            appendLog("보안 유형: " + securityType);
-                            appendLog("위험도: " + riskLevel);
+                            appendLog("WiFi 감지: " + ssid);
+                            
                             try {
                                 WifiSecurityChecker.sendDiscordAlert(wifiInfo, securityType, riskLevel);
                                 appendLog("디스코드로 알림 전송 완료");
